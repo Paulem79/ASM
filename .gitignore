@@ -1,0 +1,6 @@
+# Remove all executable files and .o for sub directories
+**/*.o
+**/*.exe
+**/*.dll
+**/*.so
+outs/
