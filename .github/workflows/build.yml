@@ -47,17 +47,29 @@ jobs:
       - name: Create output directory
         run: mkdir -p outs
 
-      - name: Assemble ASM (Linux/macOS)
-        if: runner.os != 'Windows'
-        run: nasm -f ${{ matrix.nasm-format }} hello.asm -o outs/hello_asm.o
+      - name: Assemble ASM (Linux)
+        if: runner.os == 'Linux'
+        run: nasm -f elf64 hello.asm -o outs/hello_asm.o
 
-      - name: Compile C (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Assemble ASM (macOS)
+        if: runner.os == 'macOS'
+        run: nasm -f macho64 hello.asm -o outs/hello_asm.o
+
+      - name: Compile C (Linux)
+        if: runner.os == 'Linux'
         run: gcc -c hello.c -o outs/hello_c.o
 
-      - name: Link (Linux/macOS)
-        if: runner.os != 'Windows'
+      - name: Link (Linux)
+        if: runner.os == 'Linux'
         run: gcc outs/hello_c.o outs/hello_asm.o -o outs/${{ matrix.output-name }}
+
+      - name: Compile C (macOS - x86_64 for Rosetta 2)
+        if: runner.os == 'macOS'
+        run: gcc -c hello.c -arch x86_64 -o outs/hello_c.o
+
+      - name: Link (macOS - x86_64 for Rosetta 2)
+        if: runner.os == 'macOS'
+        run: gcc outs/hello_c.o outs/hello_asm.o -arch x86_64 -o outs/${{ matrix.output-name }}
 
       - name: Assemble ASM (Windows)
         if: runner.os == 'Windows'
