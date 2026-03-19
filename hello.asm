@@ -9,26 +9,8 @@ section .data
     msg2 db 'Assembleur est puissant.', 0xA, 0
 
 section .text
-    global _start
+    global _print
 
-_start:
-    ; Afficher le premier message
-    mov rdi, msg1
-    call _print
-
-    ; Afficher le deuxième message
-    mov rdi, msg2
-    call _print
-
-    ; Quitter
-    mov rax, SYS_EXIT
-    xor rdi, rdi
-    syscall
-
-; ---------------------------------------------------------
-; _print : Calcule la longueur et affiche la chaîne
-; Entrée : RDI = adresse de la chaîne (doit finir par 0)
-; ---------------------------------------------------------
 _print:
     ; 1. Calcul de la longueur
     mov rsi, rdi        ; On garde l'adresse de départ dans RSI pour le futur syscall
